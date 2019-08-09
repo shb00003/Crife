@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 선언 -->
+<mapper namespace="notice">
+	<select id="noticeList" resultType="noticeDto">		<!-- resultType 경로는 mybatis-config.xml에 따로 지정 -->
+		select notice_idx, notice_title, mem_name, mem_email, notice_date
+		from notice n, member m
+		where n.mem_idx = m.mem_idx
+		order by notice_idx
+	<!-- select*
+	from(
+		select A.*
+		from(
+			select notice_idx, notice_title, mem_name, mem_email, notice_date
+			from notice n, member m
+			where n.mem_idx = m.mem_idx	
+		) A
+	) AA
+	where notice_idx between #{start} and #{end}
+	order by notice_idx -->
+	</select>
+	
+	<select id="detail_notice" resultType="noticeDto">
+		select notice_idx, notice_title, mem_name, notice_date, notice_content
+		from notice n, member m
+		where n.mem_idx = m.mem_idx and notice_idx=#{notice_idx} 
+	</select>
+	
+	<insert id="insert_notice">
+		insert into notice (notice_title, notice_content, notice_date , mem_idx)
+		values (#{notice_title}, #{notice_content}, now(), #{mem_idx})
+	</insert>
+	
+	<update id="update_notice">
+		update notice
+		set notice_title=#{notice_title}, notice_content=#{notice_content}
+		where notice_idx=#{notice_idx}
+	</update>
+	
+	<delete id="delete_notice">
+		delete 
+		from notice 
+		where notice_idx=#{notice_idx}
+	</delete>
+	
+</mapper>

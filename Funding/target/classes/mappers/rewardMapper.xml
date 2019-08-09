@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 선언 -->
+<!-- int reward_id; //order_reward_T의 키 값
+ 	 int pro_id; // project_T의 키 값
+	 int mem_idx; // member_T의 키값
+	 String reward_title; // 리워드 상품 이름
+	 int reward_price; // 리워드 개당 금액
+	 int reward_sell_count; // 판매가능 갯수 -->
+	 
+<mapper namespace= "com.crowd.funding.mapper.rewardMapper">
+
+	<!-- rewardDTO 삽입  -->
+	<insert id="reward_create">
+		INSERT 
+		INTO REWARD_ITEM (pro_id, mem_idx, reward_title, reward_price, reward_sell_count) 
+		VALUES (#{pro_id},#{mem_idx},#{reward_title},#{reward_price},#{reward_sell_count});
+	</insert>
+	
+	<!--펀딩하기 클릭시, 프로젝트 상세보기 시 보여지는 rewardDTO 리스트 반환  -->
+	<!--각 리워드 별 주문수량을 알기위해 group by를 하며 sum을 하였다.  -->
+	<select id="reward_all" resultMap="rewardMap">
+		SELECT t1.reward_id, t1.pro_id, t1.mem_idx, t1.reward_title, t1.reward_price, t1.reward_sell_count, (reward_sell_count-qty) AS remain_count
+		FROM REWARD_ITEM AS t1,
+		(SELECT reward_id, sum(order_count) AS qty
+		FROM myorder
+		WHERE pro_id = #{pro_id}
+		group by reward_id) AS t2
+		WHERE t1.reward_id = t2.reward_id
+	</select>
+	
+	<!--check box로 선택된 reward 반환  -->
+	<select id="reward_select" resultType="com.crowd.funding.reward.domain.RewardDTO">
+		SELECT *
+		FROM REWARD_ITEM
+		WHERE reward_id IN
+		<foreach collection="array" item="reward_id" index="index"  open="(" close=")" separator=",">
+            #{reward_id}
+        </foreach>
+	</select>
+
+	<select id="personinfo" resultType="com.crowd.funding.member.model.MemberDTO">
+		select `mem_idx`,`mem_name`,`mem_phone`,`mem_email` from member where mem_idx = #{mem_idx} 
+	</select>
+	
+	<resultMap type="com.crowd.funding.reward.domain.RewardDTO" id="rewardMap">
+		<id column="reward_id" property="reward_id" />
+		<result column="pro_id" property="pro_id" />
+		<result column="mem_idx" property="mem_idx" />
+		<result column="reward_title" property="reward_title" />
+		<result column="reward_price" property="reward_price" />
+		<result column="reward_sell_count" property="reward_sell_count" />
+		<result column="remain_count" property="remain_count"/>
+		<!-- 1 : 다 관계의 경우 데이터 매핑시켜준다. 
+			association => 1 : 1 관계 
+			collection => 1 : 다 관계 (한명의 유저가 작성한 글 목록)
+			일반 컬럼과 pk 구분 가능 pk 칼럼에게는 result 아닌 id 사용
+		-->
+
+		<association javaType="com.crowd.funding.myorder.domain.MyorderDTO" property="myorderDTO">
+			<id column="myinfo" property="myinfo"/>
+			<result column="mem_idx" property="mem_idx"/>
+			<result column="pro_id" property="pro_id"/>
+			<result column="reward_id" property="reward_id"/>
+			<result column="order_count" property="order_count"/>
+			<result column="order_id" property="order_id"/>		
+		</association>
+	</resultMap>
+</mapper>

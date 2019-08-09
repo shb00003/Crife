@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 선언 -->
+
+<mapper namespace= "com.crowd.funding.mapper.myorderMapper">
+
+<select id="my_reward_select">
+
+<!--group by를 추가하면 한개, 아니면 내가 여러번 산만큼 프로젝트를 보여주게된다.  -->
+<!-- 리워드 한 목록 여러개 보여주기  -->
+	SELECT t1.pro_name, t1.pro_category,  t3.mem_name
+	FROM project as t1, 
+	(select * from myorder) as t2, 
+	member as t3 
+	WHERE t1.pro_id = t2.pro_id AND t2.mem_idx = t3.mem_idx AND t2.pro_id = 2 AND t2.mem_idx = 2; 
+</select>
+<!-- 현재 로그인한 회원이 리워드한 프로젝트 리스트  -->
+<!-- 하나만 보여주기  -->
+<select id="my_order_list" resultType="com.crowd.funding.myorder.common.MyorderDTOJoin">
+	SELECT t1.pro_name, t1.pro_category,  t3.mem_name, t2.order_id
+	FROM project as t1, 
+	(select * from myorder group by order_id) as t2, 
+	member as t3 
+	WHERE t1.pro_id = t2.pro_id AND t1.mem_idx = t3.mem_idx AND t2.mem_idx = #{mem_idx}
+	order by t2.order_id desc
+</select>
+
+<!--구매이력에서 선택한 상품 주문정보를 검색 -->
+<!-- <select id="order_info" resultType="com.crowd.funding.myorder.common.MyorderDTOJoin">
+	SELECT mo.order_id, mo.order_date, mo.payment_yn, pro.pro_end, pro.pro_name, mem.mem_name, ro.order_name,
+	ro.order_phone, ro.order_requests, ro.order_status, ro.order_address1, ro.order_address3, ro.order_address4
+	FROM myorder as mo, project as pro, member as mem, reward_order as ro
+	WHERE mo.pro_id = pro.pro_id AND pro.mem_idx = mem.mem_idx AND mo.order_id = ro.order_id
+	AND mo.order_id = #{order_id}
+	group by order_id;
+</select> -->
+<!--위의 내용을 분해한 것 -->
+<select id="order_info" parameterType="int" resultType="com.crowd.funding.myorder.domain.MyorderDTO">
+	SELECT mo.order_id, mo.order_date
+	FROM myorder as mo
+	WHERE order_id = #{order_id}
+	limit 1
+</select>
+<select id="pro_info" parameterType="int" resultType="projectDto">
+	SELECT pro_end, pro_name
+	FROM project as pro, myorder as mo
+	WHERE mo.pro_id = pro.pro_id AND mo.order_id = #{order_id}
+	limit 1
+</select>
+<select id="mem_info" parameterType="int" resultType="memberDto">
+	SELECT mem.mem_name
+	FROM project as pro, myorder as mo, member as mem
+	WHERE pro.pro_id = mem.mem_idx AND pro.pro_id = mo.pro_id AND mo.order_id = #{order_id}
+	limit 1
+</select>
+<select id="shipment_info" parameterType="int" resultType="com.crowd.funding.order.domain.OrderDTO">
+	SELECT ro.order_name,ro.order_phone, ro.order_requests, ro.order_status, ro.order_address1, ro.order_address2, ro.order_address3, ro.order_address4
+	FROM reward_order as ro where ro.order_id = #{order_id}
+	limit 1
+</select>
+<select id="reward_info" parameterType="int" resultType="com.crowd.funding.reward.domain.RewardDTO">
+	SELECT ri.reward_id, ri.reward_title, ri.reward_description, 
+	ri.reward_price, ri.reward_option_detail
+	FROM reward_item as ri, myorder as mo
+	where mo.reward_id = ri.reward_id AND mo.order_id= #{order_id}
+</select>
+
+</mapper>

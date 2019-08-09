@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 선언 -->
+<mapper namespace= "admin">
+
+<select id="mem_list"
+            resultType="memberDto">
+            select * from member order by mem_idx
+            </select>
+            
+<select id="project_all"
+           resultType="projectDto">
+           select pro_idx, pro_name, maker_name, pro_start, pro_type1 from project p, maker m 
+           where p.maker_idx=m.maker_idx and pro_type1 not in (1)      
+</select>
+
+<select id="managerList" resultType="com.crowd.funding.admin.manager.ManagerDTO">
+           select * from admin order by admin_id
+</select>
+
+</mapper>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 선언 -->
+
+<!-- int order_id; // reward_order_T 의 PrimaryKey
+	int mem_idx; // member_T의 primary Key
+	String order_name; // 주문 창에서 입력하는 email
+	String order_name; // 주문 창에서 입력하는 name
+	String order_email; // 주문 창에서 입력하는 email
+	int total_money; // 최종 금액 이나 필요 없을 수 있다.getTotalMoney 함수로 대체 가능함.
+	String order_requests; // 배송시 요청사항
+	int order_status; // 결제 승인 여부
+	String order_address1; //우편번호
+	String order_address2; //도로명주소
+	String order_address3; //지번주소
+	String order_address4; //상세주소
+-->
+
+
+<mapper namespace= "com.crowd.funding.mapper.orderMapper">
+	<!-- 주문 창에서 입력한 내용 저장  -->
+	<insert id = "order_insert" useGeneratedKeys="true" keyProperty="order_id">
+		INSERT INTO  
+		REWARD_ORDER (mem_idx, order_email, order_name, order_phone, order_address1,order_address2,order_address3,order_address4)
+		VALUES (2,#{order_email},#{order_name},#{order_phone},#{order_address1},#{order_address2},#{order_address3},#{order_address4});
+	</insert>
+	
+	<!--order에 저장한 후 myorder에도 저장하는데 다수 DTO 저장  -->
+	<insert id ="my_order_insert">
+		INSERT INTO myorder (mem_idx, pro_id, reward_id, order_count, order_id, order_date) 
+		VALUES 
+		<foreach separator="," item="item" collection="list">
+           (2,2,#{item.reward_id},#{item.order_count},#{item.order_id},now())
+        </foreach>
+	</insert>
+	
+	<select id="order_info" resultType="com.crowd.funding.order.domain.OrderDTO">
+		select order_name, order_phone, CONCAT_WS(' ',order_address1, order_address3, order_address4) AS order_address_all
+		from reward_order
+		where mem_idx = #{mem_idx}
+		order by order_id desc
+		limit 1;
+	</select>
+	
+</mapper>

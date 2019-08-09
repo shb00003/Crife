@@ -1,0 +1,50 @@
+.tab{
+}
+.tab ul{
+	text-align: center;
+}
+.tab ul li{
+	text-align: center;
+}
+/* #under:hover{
+	text-decoration: underline;
+} */
+.menu, .content{
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+.menu:after{
+	content: ' ';
+	display: block;
+	clear: both;
+}
+.menu > li{
+	float: left;
+	width: 25%;
+	box-sizing: border-box;
+	border-left: 1px solid #000;
+	border-bottom: 1px solid #000;
+}
+.menu > li:first-child {
+	border-left: none;
+}
+.menu > li > a {
+	display: block;
+	text-align: center;
+	text-decoration: none;
+	color: inherit;
+	line-height: 30px;
+}
+.menu > li.active{
+	background-color: #ccc;
+}
+.content{
+	padding: 10px;
+}
+.content > li{
+	display: none;
+}
+.content > li.active{
+	display: block;
+}

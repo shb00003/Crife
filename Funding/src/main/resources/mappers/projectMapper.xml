@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 선언 -->
+<mapper namespace= "project">
+
+	
+	<insert id="add" parameterType="com.crowd.funding.project.model.ProjectDTO" useGeneratedKeys="true"   
+  		keyProperty="pro_id">
+  			insert into project(pro_status,mem_idx)
+			values(0,#{mem_idx})
+	</insert>
+	
+	<update id="save1">
+		update project
+		set pro_category=#{pro_category}, pro_name=#{pro_name},pro_price=#{pro_price},
+			pro_keyword1=#{pro_keyword1}, pro_keyword2=#{pro_keyword2},pro_keyword3=#{pro_keyword3},
+			pro_imageURL=#{pro_imageURL}, pro_start=#{pro_start}, pro_end=#{pro_end}
+		where pro_id=#{pro_id} limit 1
+	</update>
+	
+	<select id ="pro_list" resultType="com.crowd.funding.project.model.ProjectDTO">
+		select *, TIMESTAMPDIFF(DAY, CURDATE(), `pro_end`) day from project order by pro_id desc;
+	</select>
+	
+	<select id ="pro_detail" resultType="com.crowd.funding.project.model.ProjectDTO">
+		select * from project where pro_id = #{pro_id}
+	</select>
+	
+	<select id ="pro_name" resultType="String">
+		select pro_name from project where pro_id = #{pro_id}
+	</select>
+	
+	<select id ="pro_id" resultType="int">
+		select pro_id from project where pro_name = #{pro_name}
+	</select>
+	
+	<select id ="my_pro" resultType="com.crowd.funding.project.model.ProjectDTO">
+		select * from project where mem_idx=#{mem_idx}
+	</select>
+	
+	<delete id="my_delete">
+		delete from project where pro_id=#{pro_id}
+	</delete>
+	
+	<update id="story_update">
+		update project
+		set pro_video=REPLACE(#{pro_video}, "watch?v=", "embed/"),
+		 	pro_summary=#{pro_summary}, pro_content=#{pro_content}
+		where pro_id=#{pro_id} limit 1
+	</update>
+</mapper>

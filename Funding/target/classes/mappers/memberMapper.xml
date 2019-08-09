@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<!-- namespace 선언 -->
+<mapper namespace= "member">
+	
+	<resultMap type="memberDto" id="memberMAP">
+				<!-- property="DTO의 변수명" column="DB의 컬럼명" -->
+		<id property="mem_idx" column="mem_idx" />
+		<result property="mem_type" column="mem_type"/>
+		<result property="mem_email" column="mem_email"/>
+		<result property="mem_password" column="mem_password"/>
+		<result property="mem_name" column="mem_name"/>
+		<result property="mem_phone" column="mem_phone"/>
+		<result property="mem_birth" column="mem_birth"/>
+		<result property="mem_sex" column="mem_sex"/>
+		<result property="mem_email_cert" column="mem_email_cert"/>
+		<result property="mem_register_datetime" column="mem_register_datetime"/>
+		<result property="mem_lastlogin_datetime" column="mem_lastlogin_datetime"/>
+	</resultMap>
+	
+	<insert id="snsjoin">  
+		insert into member(mem_email,mem_password,mem_name,mem_phone,mem_birth,mem_sex,mem_type,naver_idx,mem_email_cert) 
+		values(#{mem_email},#{mem_password},#{mem_name},#{mem_phone},#{mem_birth},#{mem_sex},'4',#{naver_idx},'1')
+	</insert>
+	<select id="snsLogin" resultType="memberDto">
+		select * from member where naver_idx = #{naver_idx}
+	</select>
+
+	<insert id="join">
+		insert into member(mem_email,mem_password,mem_name,mem_phone,mem_birth,mem_sex) 
+		values(#{mem_email},#{mem_password},#{mem_name},#{mem_phone},#{mem_birth},#{mem_sex})
+	</insert>
+	<insert id="join_email">
+		insert into member_auth(mem_email,email_key, email_type)
+			values(#{mem_email},#{email_key},"1")
+	</insert>
+	<update id="auth_email">
+		update member a, member_auth b
+ 				set a.mem_email_cert=1
+ 				where a.mem_email=b.mem_email
+ 						and b.email_key=#{email_key}
+ 						and b.mem_email=#{mem_email}
+	</update>
+	<update id="keyTOexpired">
+		update member_auth
+			set email_key='expired'
+			where mem_email=#{mem_email} and email_key!='expired'
+	</update>
+	<select id="chkexpired" resultType="int">
+		select count(*) from member_auth 
+			where mem_email=#{mem_email} and email_key!='expired' and email_type =#{email_type}
+	</select>
+	
+	<select id="login" resultMap="memberMAP">
+		select * from member where mem_email = #{mem_email}
+	</select>
+	
+	<update id="lastLogin">
+		update member set mem_lastlogin_datetime=#{lastLogin}
+		where mem_email = #{mem_email}
+	</update>
+	
+	<update id="keepLogin">
+		update member set session_key = #{sessionid}, session_limit=#{sessionlimit}
+		where mem_email = #{mem_email}
+	</update>
+	
+	<select id="checkSessionKey" resultMap="memberMAP">
+		select * from member where session_key = #{value}
+	</select>
+	
+	<select id="myinfo" resultType="memberDto">
+		select * from member where mem_idx = #{mem_idx} 
+	</select>
+	
+	<update id="myinfo_up">
+		update member 
+			set mem_password = #{mem_password},mem_name=#{mem_name},mem_phone=#{mem_phone}
+				<!--  ,mem_zipcode=#{mem_zipcode},mem_address1=#{mem_address1},mem_address2=#{mem_address2},
+				mem_address3=#{mem_address3},mem_address4=#{mem_address4},mem_photo=#{mem_photo} -->
+			where mem_idx=#{mem_idx}	
+	</update>
+	
+	<update id="myinfo_del">
+		update member set mem_type=3 where mem_idx=#{mem_idx}	
+	</update>
+	
+	
+	<select id="userfindID" resultType="int">
+		select count(*) from member where mem_email=#{find}
+	</select>
+	
+	<insert id="emailpw">
+		insert into member_auth(mem_email,email_key, email_type)
+			values(#{find},#{email_key},"3")
+	</insert>
+	<update id="resetPW">
+		update member a, member_auth b
+ 				set a.mem_password=#{mem_password}
+ 				where a.mem_email=b.mem_email
+ 						and b.email_key=#{email_key}
+ 						and b.mem_email=#{mem_email}
+	</update>
+	
+	
+
+</mapper>
