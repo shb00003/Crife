@@ -22,13 +22,13 @@ public class Ad_ProjectController {
 	@Inject
 	Ad_ProjectService adProjectService;
 
-	@RequestMapping("adminhome.do")
+	@RequestMapping("/adminhome.do")
 	public String admin() {
 		
 		return "admin/admin_home";
 	}
 
-	@RequestMapping("projectall.do")
+	@RequestMapping("/projectall.do")
 	public ModelAndView projectAll(ModelAndView mav) {
 
 		// 포워딩할 뷰의 이름

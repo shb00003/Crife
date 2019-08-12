@@ -5,6 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+	<%@ include file="../include/header.jsp"%>
 <!-- bootstrap 적용 -->
 <link rel="stylesheet"
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -23,9 +24,8 @@
 	crossorigin="anonymous"></script>
 </head>
 <body>
-	<%@ include file="../include/navbar.jsp"%>
 <br>
-<a href="${path}/admin/managerList.do">관리자 리스트</a> |
+<%@ include file="../include/admin_menu.jsp"%>
 
 	<form name="adLogin" method="post">
 		<table>

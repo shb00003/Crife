@@ -6,7 +6,7 @@ import com.crowd.funding.project.model.ProjectDTO;
 
 public interface Ad_ProjectDAO {
 	public List<ProjectDTO> projectAll();
-
-	
+	public List<ProjectDTO> projectSearch
+	(String searchOption, String keyword) throws Exception;
 
 }

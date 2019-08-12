@@ -12,8 +12,8 @@
             
 <select id="project_all"
            resultType="projectDto">
-           select pro_idx, pro_name, maker_name, pro_start, pro_type1 from project p, maker m 
-           where p.maker_idx=m.maker_idx and pro_type1 not in (1)      
+           select pro_id, pro_name, maker_name, pro_imageURL, pro_start, pro_status from project p, maker m 
+           where p.maker_idx=m.maker_idx and pro_status not in (1)      
 </select>
 
 <select id="managerList" resultType="com.crowd.funding.admin.manager.ManagerDTO">

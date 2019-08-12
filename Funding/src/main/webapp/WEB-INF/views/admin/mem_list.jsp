@@ -26,7 +26,7 @@
 </head>
 <body>
 <br>
-	<%@ include file="../include/navbar.jsp"%>
+	<%@ include file="../include/admin_menu.jsp"%>
 <table><tr><td height="30px"></td></tr></table>
 
 <table align="center">
@@ -52,7 +52,8 @@
 </tr>
 <c:forEach var="row" items="${member}">
 <tr>
-<td>${row.mem_name}</td>
+<td><a href="${path}/admin/mem_view/${row.mem_idx}">
+    ${row.mem_name}</a></td>
 <td>${row.mem_email}</td>
 <td>${row.mem_phone}</td>
 <td>${row.mem_birth}</td>

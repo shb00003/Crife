@@ -24,15 +24,15 @@
 </head>
 <body>
 	<br>
-	
-	<%@ include file="../include/navbar.jsp"%>
+	<%@ include file="../include/admin_menu.jsp"%>
+	<br>
 	<table>
 		<tr>
 			<td height="30px"></td>
 		</tr>
 	</table>
 
-	<table>
+	<table align="center" border="1">
 		<tr>
 			<td>관리자 아이디</td>
 			<td>관리자 이름</td>
