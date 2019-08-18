@@ -5,8 +5,8 @@ import java.util.List;
 import com.crowd.funding.project.model.ProjectDTO;
 
 public interface Ad_ProjectDAO {
-	public List<ProjectDTO> projectAll();
-	public List<ProjectDTO> projectSearch
-	(String searchOption, String keyword) throws Exception;
+	public List<ProjectDTO> projectAll(String searchOption, String keyword) throws Exception;
+	public int proCount(String searchOption, String keyword) throws Exception;
 
+	
 }

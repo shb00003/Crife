@@ -12,12 +12,19 @@ import com.crowd.funding.project.model.ProjectDTO;
 public class Ad_ProjectServiceImpl implements Ad_ProjectService {
 	
 	@Inject
-	Ad_ProjectDAO ad_ProjectDao;
+	Ad_ProjectDAO proDao;
+	
 	
 	@Override
-	public List<ProjectDTO> projectAll() {
-		return ad_ProjectDao.projectAll();
+	public List<ProjectDTO> projectAll(String searchOption, String keyword) throws Exception {
+		return proDao.projectAll(searchOption, keyword);
 	}
 
 
+	@Override
+	public int proCount(String searchOption, String keyword) throws Exception {
+		return proDao.proCount(searchOption, keyword);
+	}
+	
+	
 }

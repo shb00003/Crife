@@ -18,16 +18,23 @@ public class Ad_ProjectDAOImpl implements Ad_ProjectDAO {
 	SqlSession sql;
 
 	@Override
-	public List<ProjectDTO> projectAll(){
-		return sql.selectList("admin.project_all");
-	}
-	@Override
-	public List<ProjectDTO> projectSearch
-	(String searchOption, String keyword) throws Exception {
+	public List<ProjectDTO> projectAll(String searchOption, String keyword) throws Exception {
+		
 		Map<String, String> map=new HashMap<String, String>();
 		map.put("searchOption", searchOption);
-		map.put("keyword", keyword);
-		return sql.selectList("admin.project_all",map);
+		map.put("keyword", keyword);	
+		return sql.selectList("admin.projectAll", map);
 	}
+
+	@Override
+	public int proCount(String searchOption, String keyword) throws Exception {
+		Map<String, String> map=new HashMap<String, String>();
+		map.put("searchOption", searchOption);
+		map.put("keyword", keyword);	
+		return sql.selectOne("admin.proCount", map);
+	}
+
+	
+	
 	
 }
