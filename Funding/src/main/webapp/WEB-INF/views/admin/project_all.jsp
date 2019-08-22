@@ -24,18 +24,35 @@
 	crossorigin="anonymous"></script>
 </head>
 <body>
+<center>
 	<br>
 	<%@ include file="../include/admin_menu.jsp"%>
-	<%@ include file="../include/project_search.jsp"%>
+
     <br>
+    <form name="Search" method="post" action="${path}/admin/projectall.do">
+    <select name="searchOption" id="searchOption">
+ <option value="pro_all" <c:if test="${map.searchOption=='pro_all'}">selected</c:if> >전체조회</option>
+ <option value="pro_name" <c:if test="${map.searchOption=='pro_name'}">selected</c:if> >프로젝트 제목</option>
+ <option value="pro_id" <c:if test="${map.searchOption=='pro_id'}">selected</c:if> >프로젝트 번호</option>
+ <option value="maker_name"<c:if test="${map.searchOption=='maker_name'}">selected</c:if> >메이커명</option>
+ <option value="maker_idx" <c:if test="${map.searchOption=='maker_idx'}">selected</c:if> >메이커 번호</option>
+ </select>
+ <input name="keyword" value="${map.keyword}">
+ <input type="submit" value="조회">
+ </form>
+ <br>
+<!--  레코드의 갯수를 출력 -->
+${map.count}개의 프로젝트가 조회되었습니다.<p>
+
 	<table align="center" border="1">
 		<tr>
-			<td>No</td>
-			<td colspan="2">프로젝트명</td>
-			<td>메이커</td>
-			<td>프로젝트 시작일</td>
-			<td>상태</td>
-			<c:forEach var="ad" items="${list}">
+			<th>No</th>
+			<th colspan="2">프로젝트명</th>
+			<th>메이커</th>
+			<th>프로젝트 시작일</th>
+			<th>상태</th>
+		</tr>
+			<c:forEach var="ad" items="${map.list}">
 				<tr>
 					<td>${ad.pro_id}</td>
 					<td><img src="${path}/images/${ad.pro_imageURL}" width="100px"
@@ -44,7 +61,10 @@
 							${ad.pro_name}</a></td>
 					<td><a href="${path}/admin/mem_view/${ad.maker_idx}">
 							${ad.maker_name}</td>
-					<td>${ad.pro_start}</td>
+					<td><fmt:parseDate var="parseDate" value="${ad.pro_start}"
+					                    pattern="yyyy-MM-dd"/>
+					<fmt:formatDate value="${parseDate}"
+					                    pattern="yyyy-MM-dd"/> </td>
 					<td><c:choose>
 							<c:when test="${ad.pro_status == '2'}">승인대기</c:when>
 							<c:when test="${ad.pro_status == '3'}">오픈예정</c:when>
@@ -54,5 +74,6 @@
 				</tr>
 			</c:forEach>
 	</table>
+</center>
 </body>
 </html>

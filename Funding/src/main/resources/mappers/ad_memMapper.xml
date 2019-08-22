@@ -2,41 +2,70 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <!-- namespace 선언 -->
 <mapper namespace="admin">
 
-	<select id="mem_list" resultType="memberDto">
-		select * from member order by mem_idx
+	<!-- 회원관리 -->
+	<select id="memList" resultType="memberDto">
+		select * from member
+		<include refid="memSearch0"></include>
 	</select>
-	
-    <!-- 프로젝트 목록 조회 -->
+	<!-- where절은 sql코드에 있음 -->
+
+	<select id="memCount" resultType="int">
+		select count(*) from member
+		<include refid="memSearch0"></include>
+	</select>
+	<!-- where절은 sql코드에 있음 -->
+
+	<sql id="memSearch0">
+		<choose>
+			<when test="memSearch =='mem_all'">
+				where mem_type like '1'
+			</when>
+			<when test="memSearch != 'mem_address'">
+				where ${memSearch} like #{keyword}
+			</when>
+			<otherwise>
+				where mem_address1 like #{keyword} or mem_address2 like #{keyword}
+				or mem_address3 like #{keyword} or mem_address4 like #{keyword}
+			</otherwise>
+
+		</choose>
+	</sql>
+
+
+	<!-- 프로젝트 목록 조회 -->
 	<select id="projectAll" resultType="projectDto">
-		select pro_id, pro_name, maker_name, pro_imageURL, pro_start, pro_status
+		select pro_id, pro_name, maker_name, pro_imageURL, pro_start,
+		pro_status
 		from project p, maker m
-		<!-- where p.maker_idx=m.maker_idx and pro_status not in (1)
-		or ${proList} like '%'||#{keyword}||'%' -->
 		<include refid="pro_search"></include>
 	</select>
-	
+
 	<select id="proCount" resultType="int">
-	select count(*) from project p, maker m
-	<include refid="pro_search"></include>
+		select count(*) from project p, maker m
+		<include refid="pro_search"></include>
 	</select>
-	
-	<!-- sql코드 조각
-	           반복되는 sql의 일부를 sql태그를 이용하여 따로 빼둘 수 있다.
-	           두가지의 searchOption값으로 쿼리문 작성을 한번에 넣기가 어려워 태그 사용 -->
+
+	<!-- sql코드 조각 반복되는 sql의 일부를 sql태그를 이용하여 따로 빼둘 수 있다. 두가지의 searchOption값으로 
+		  쿼리문 작성을 한번에 넣기가 어려워 태그 사용 -->
 	<sql id="pro_search">
 		<choose>
 			<when test="searchOption=='pro_all'">
-				where p.maker_idx=m.maker_idx and pro_status not in (1)
+				where p.maker_idx=m.maker_idx and pro_status not in
+				(1)
 			</when>
 			<otherwise>
-				where ${searchOption} like '%'||#{keyword}||'%'
+				where p.maker_idx=m.maker_idx and ${searchOption} like
+				#{keyword}
+				and pro_status not in (1)
 			</otherwise>
 		</choose>
 	</sql>
 
+	<!-- === 관리자 === -->
 	<select id="managerList"
 		resultType="com.crowd.funding.admin.manager.ManagerDTO">
 		select * from admin order by admin_id

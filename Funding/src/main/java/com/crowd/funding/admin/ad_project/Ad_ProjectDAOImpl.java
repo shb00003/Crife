@@ -22,15 +22,15 @@ public class Ad_ProjectDAOImpl implements Ad_ProjectDAO {
 		
 		Map<String, String> map=new HashMap<String, String>();
 		map.put("searchOption", searchOption);
-		map.put("keyword", keyword);	
+		map.put("keyword", "%"+keyword+"%");	
 		return sql.selectList("admin.projectAll", map);
 	}
 
 	@Override
 	public int proCount(String searchOption, String keyword) throws Exception {
-		Map<String, String> map=new HashMap<String, String>();
+		Map<String, String> map=new HashMap<>();
 		map.put("searchOption", searchOption);
-		map.put("keyword", keyword);	
+		map.put("keyword", "%"+keyword+"%");	
 		return sql.selectOne("admin.proCount", map);
 	}
 

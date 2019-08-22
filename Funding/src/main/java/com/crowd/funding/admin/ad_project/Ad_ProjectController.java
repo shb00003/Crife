@@ -1,4 +1,4 @@
-package com.crowd.funding.admin.ad_project;
+ package com.crowd.funding.admin.ad_project;
 
 import java.util.HashMap;
 import java.util.List;
@@ -23,26 +23,19 @@ public class Ad_ProjectController {
 	@Inject
 	Ad_ProjectService proService;
 
-	@RequestMapping("/adminhome.do")
-	public String admin() {
-		
-		return "admin/admin_home";
-	}
-
 	@RequestMapping("/projectall.do")
-	public ModelAndView projectAll (@RequestParam(defaultValue="") String searchOption,
+	public ModelAndView projectAll (@RequestParam(defaultValue="pro_all") String searchOption,
 	                                @RequestParam(defaultValue="") String keyword) throws Exception{
-		List<ProjectDTO> projectAll=proService.projectAll(searchOption, keyword);
 		int count=proService.proCount(searchOption, keyword);  //레코드 갯수
+		List<ProjectDTO> projectAll=proService.projectAll(searchOption, keyword);
 		ModelAndView mav=new ModelAndView(); //모델과 뷰
-
-		Map<String, Object> map=new HashMap<String, Object>();
+		Map<String, Object> map=new HashMap<>();
 		map.put("list", projectAll); 
 		map.put("count", count);  //레코드 갯수
 		map.put("searchOption", searchOption);  //검색옵션
 		map.put("keyword", keyword); //검색 키워드
 		mav.addObject("map", map);  //맵에 저장된 데이터를 mav에 저장
-		
+		System.out.println(count+"여기야 여기~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 		mav.setViewName("/admin/project_all"); // 전달할 데이터
 		return mav;
 	}
