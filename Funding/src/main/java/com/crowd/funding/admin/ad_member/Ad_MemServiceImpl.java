@@ -12,22 +12,50 @@ import com.crowd.funding.member.model.MemberDTO;
 public class Ad_MemServiceImpl implements Ad_MemService {
 
 	@Inject
-	Ad_MemberDAO ad_memberDao;
+	Ad_MemberDAO ad_memDao;
+
+	@Override
+	public List<MemberDTO> memList(String memSearch, String keyword,  
+			                       int start, int end) throws Exception {
+		
+		return ad_memDao.memList(memSearch, keyword, start, end);
+	}
+
+	@Override
+	public int memCount(String memSearch, String keyword) throws Exception {
+		
+		return ad_memDao.memCount(memSearch, keyword);
+	}
+
+	@Override
+	public int memTotCount() throws Exception {
+	
+		return ad_memDao.memTotCount();
+	}
 	
 	@Override
-	public List<MemberDTO> memberList() {
-		return ad_memberDao.memberList();
+	public int memTotCount_3() throws Exception {
+		
+		return ad_memDao.memTotCount_3();
 	}
 
 	@Override
-	public MemberDTO memberDetail(int mem_idx) {
-		return ad_memberDao.memberDetail(mem_idx);
+	public MemberDTO memView(int mem_idx) throws Exception {
+		
+		return ad_memDao.memView(mem_idx);
 	}
 
 	@Override
-	public void memberUpdate(MemberDTO dto) {
-		ad_memberDao.memberUpdate(dto);
-
+	public void memUpdate(MemberDTO dto) throws Exception {
+		ad_memDao.memUpdate(dto);
+		
 	}
 
+	@Override
+	public void memDelete(int mem_idx) throws Exception {
+		ad_memDao.memDelete(mem_idx);
+		
+	}
+	
+	
 }
