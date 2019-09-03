@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper
-  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!-- namespace 선언 -->
 <mapper namespace="admin">
@@ -11,46 +9,72 @@
 		select * from member
 		<include refid="memSearch0"></include>
 	</select>
-	<!-- where절은 sql코드에 있음 -->
 
 	<select id="memCount" resultType="int">
 		select count(*) from member
 		<include refid="memSearch0"></include>
 	</select>
+
+    <select id="memTotCount" resultType="int">
+		select count(*) from member 
+	</select>
+	
+    <select id="memTotCount_3" resultType="int">
+		select count(*) from member where mem_type=3
+	</select>
+
 	<!-- where절은 sql코드에 있음 -->
 
 	<sql id="memSearch0">
 		<choose>
-			<when test="memSearch =='mem_all'">
-				where mem_type like '1'
-			</when>
-			<when test="memSearch != 'mem_address'">
-				where ${memSearch} like #{keyword}
-			</when>
+		    <when test="memSearch =='mem_name'">
+		    where mem_name like #{keyword} order by mem_idx
+		    </when>
+		    <when test="memSearch =='mem_address'">
+		    where mem_address1 like #{keyword} or mem_address2 like
+				#{keyword}
+				or
+				mem_address3 like #{keyword} or mem_address4 like
+				#{keyword}
+				</when>
 			<otherwise>
-				where mem_address1 like #{keyword} or mem_address2 like #{keyword}
-				or mem_address3 like #{keyword} or mem_address4 like #{keyword}
+			where ${memSearch} like #{keyword} order by mem_idx
 			</otherwise>
+	
 
 		</choose>
 	</sql>
 
 
+
+	<!-- 로그인 확인 -->
+	<select id="loginCheck" resultType="String">
+		select admin_name from admin
+		where admin_id=#{admin_id} and admin_pw=#{admin_pw}
+	</select>
+	<!-- 회원 상세 보기 -->
+	<select id="memView" resultType="memberDto">
+		select * from member where order
+		by mem_idx
+	</select>
+	
+	
+<!-- ======== 프로젝트 ======== -->
 	<!-- 프로젝트 목록 조회 -->
-	<select id="projectAll" resultType="projectDto">
+	<select id="proSearch" resultType="projectDto">
 		select pro_id, pro_name, maker_name, pro_imageURL, pro_start,
 		pro_status
 		from project p, maker m
 		<include refid="pro_search"></include>
 	</select>
 
-	<select id="proCount" resultType="int">
+	<select id="searchCount" resultType="int">
 		select count(*) from project p, maker m
 		<include refid="pro_search"></include>
 	</select>
 
 	<!-- sql코드 조각 반복되는 sql의 일부를 sql태그를 이용하여 따로 빼둘 수 있다. 두가지의 searchOption값으로 
-		  쿼리문 작성을 한번에 넣기가 어려워 태그 사용 -->
+		쿼리문 작성을 한번에 넣기가 어려워 태그 사용 -->
 	<sql id="pro_search">
 		<choose>
 			<when test="searchOption=='pro_all'">

@@ -40,6 +40,15 @@ public class Ad_MemberDAOImpl implements Ad_MemberDAO {
 	}
 
 	@Override
+	public int memTotCount() throws Exception {
+		return sql.selectOne("admin.memTotCount");
+	}
+	@Override
+	public int memTotCount_3() throws Exception {
+		return sql.selectOne("admin.memTotCount_3");
+	}
+
+	@Override
 	public MemberDTO memView(int mem_idx) throws Exception {
 		return sql.selectOne("admin.memView", mem_idx);
 	}

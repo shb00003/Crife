@@ -28,6 +28,18 @@ public class Ad_MemServiceImpl implements Ad_MemService {
 	}
 
 	@Override
+	public int memTotCount() throws Exception {
+	
+		return ad_memDao.memTotCount();
+	}
+	
+	@Override
+	public int memTotCount_3() throws Exception {
+		
+		return ad_memDao.memTotCount_3();
+	}
+
+	@Override
 	public MemberDTO memView(int mem_idx) throws Exception {
 		
 		return ad_memDao.memView(mem_idx);

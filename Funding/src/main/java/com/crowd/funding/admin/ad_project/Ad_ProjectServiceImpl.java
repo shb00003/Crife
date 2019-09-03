@@ -16,14 +16,22 @@ public class Ad_ProjectServiceImpl implements Ad_ProjectService {
 	
 	
 	@Override
-	public List<ProjectDTO> projectAll(String searchOption, String keyword) throws Exception {
-		return proDao.projectAll(searchOption, keyword);
+	public List<ProjectDTO> proSearch(String searchOption, String keyword, 
+			int start, int end) throws Exception {
+		return proDao.proSearch(searchOption, keyword, start, end);
 	}
 
 
 	@Override
-	public int proCount(String searchOption, String keyword) throws Exception {
-		return proDao.proCount(searchOption, keyword);
+	public int searchCount(String searchOption, String keyword) throws Exception {
+		return proDao.searchCount(searchOption, keyword);
+	}
+
+
+	@Override
+	public int totalCount() throws Exception {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 	
 	
