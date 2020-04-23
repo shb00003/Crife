@@ -228,7 +228,7 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
-			<version>2.9.9</version>
+			<version>2.9.10.4</version>
 		</dependency>
 		<!-- lombok : @data 어노테이션 사용 -->
 		<dependency>
